@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func main2() {
 	resp, err := http.Get("http://www.baidu.com")
 	if err != nil {
 
