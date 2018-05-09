@@ -69,6 +69,7 @@ func wordCount(text string) map[string]int {
 		} else {
 			if letterStart {
 				if i-startIndex > 2 {
+					// 如果首个字符是大写，转换成小写添加进去
 					wordMap[text[startIndex:i]]++
 				}
 				letterStart = false
