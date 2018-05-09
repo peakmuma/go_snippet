@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"io/ioutil"
 	"sort"
+	"strconv"
+	"os"
 )
 
 type kv struct {
@@ -13,9 +15,7 @@ type kv struct {
 
 func main() {
 	b, err := ioutil.ReadFile("e:/test.txt")
-	if err != nil {
-		fmt.Print(err)
-	}
+	check(err)
 	str := string(b)
 	wordMap := wordCount(str)
 	//sort
@@ -26,9 +26,17 @@ func main() {
 	sort.Slice(kvArray, func(i,j int) bool {
 		return kvArray[i].Value > kvArray[j].Value
 	})
+
+	//write to file
+	f, err := os.Create("e:/test_res.txt")
+	check(err)
+	defer f.Close()
 	for _, kvObj := range kvArray {
-		fmt.Println(kvObj.Key, kvObj.Value)
+		str = kvObj.Key + " " + strconv.Itoa(kvObj.Value) + "\n"
+		// fmt.Print(str)
+		f.WriteString(str)
 	}
+	f.Sync()
 	// for k,v := range wordMap {
 	// 	fmt.Println(k, v)
 	// }
@@ -36,12 +44,11 @@ func main() {
 }
 
 func wordCount(text string) map[string]int {
-	token := []rune{' ', ',', ';', '.', '(', ')', '{', '}' , '[' , ']' , '\t', '\r', '\n', '"', ':', '+', '/', '\\', '=', '$'};
 	var wordMap map[string]int = make(map[string]int, 0)
 	startIndex := 0
 	letterStart := false
 	for i,v := range text {
-		if !runeInArray(v, token) {
+		if isLetter(v) {
 			if !letterStart {
 				letterStart = true
 				startIndex = i
@@ -58,11 +65,13 @@ func wordCount(text string) map[string]int {
 	return wordMap
 }
 
-func runeInArray(a rune, list []rune) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
+
+func isLetter (a rune) bool{
+	return (a >= 65 && a <= 90) || (a >= 97 && a <= 122) || a == '-' || a == '\''
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
 	}
-	return false
 }
