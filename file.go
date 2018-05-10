@@ -14,7 +14,7 @@ type kv struct {
 }
 
 func main() {
-	b, err := ioutil.ReadFile("e:/test.txt")
+	b, err := ioutil.ReadFile("ebook_en/article.txt")
 	check(err)
 	str := string(b)
 	//count the word
