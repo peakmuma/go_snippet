@@ -68,9 +68,11 @@ func wordCount(text string) map[string]int {
 			}
 		} else {
 			if letterStart {
-				if i-startIndex > 2 {
-					// 如果首个字符是大写，转换成小写添加进去
-					wordMap[text[startIndex:i]]++
+				word := text[startIndex:i]
+				word = processHeadTail(word)
+				if len(word) > 2 {
+					word = processFirstLetter(word)
+					wordMap[word]++
 				}
 				letterStart = false
 			}
@@ -114,4 +116,44 @@ func isExist(word string, words []string) bool {
 		}
 	}
 	return false
+}
+
+//如果首尾字符都不是字母， 则去掉
+func processHeadTail(word string) string {
+	start,end := 0,0
+	runes := []rune(word)
+	for i := 0; i < len(runes); i++ {
+		if (runes[i] >= 65 && runes[i] <= 90) || (runes[i] >= 97 && runes[i] <= 122) {
+			start = i
+			break
+		}
+	}
+	for i := len(runes)-1; i>=0; i-- {
+		if (runes[i] >= 65 && runes[i] <= 90) || (runes[i] >= 97 && runes[i] <= 122) {
+			end = i
+			break
+		}
+	}
+	if (start < end) {
+		return word[start:end + 1]
+	}
+	return ""
+}
+
+//如果首字母大写，后续字母小写， 将首字母改成小写
+func processFirstLetter(word string) string {
+	//首字母就是小写，直接返回
+	if word[0] >= 97 && word[0] <= 122 {
+		return word
+	}
+	for i,v := range word {
+		if i > 0 {
+			//如果后续有一个字母是大写，就直接返回该单词
+			if v >= 65 && v <= 90 {
+				return word
+			}
+		}
+	}
+	firstLetter := word[0] + 32
+	return string(firstLetter) + word[1:]
 }
