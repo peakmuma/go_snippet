@@ -47,7 +47,7 @@ func main() {
 	//write know words to my word repo
 	addWordsToRepo(knowWords)
 	//print the word I don't know
-	fmt.Printf("The words I don't know total is %d\n", len(knowWords))
+	fmt.Printf("The words I don't know total is %d\n", len(notKnowWords))
 	for _,w := range notKnowWords {
 		fmt.Println(w)
 	}
