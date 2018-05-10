@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"io/ioutil"
 	"os"
 	// "sort"
@@ -21,14 +21,27 @@ func main() {
 	wordMap := wordCount(str)
 	//get my words
 	mywords := getWordsFromRepo();
+	// filter
 	var newWords []string
-	//write new words to my word repo
 	for k := range wordMap {
 		if !isExist(k, mywords) {
 			newWords = append(newWords, k)
 		}
 	}
-	addWordsToRepo(newWords)
+	var knowWords []string
+	var res string
+	for i,w := range newWords {
+		fmt.Printf("[No:%d Total:%d] Do you know \"%s\" ? (y or n or q) ", i+1, len(newWords), w)
+		fmt.Scanln(&res)
+		if res == "y" {
+			knowWords = append(knowWords, w)
+		}
+		if res == "q" {
+			break
+		}
+	}
+	//write know words to my word repo
+	addWordsToRepo(knowWords)
 
 	//sort
 	// var kvArray []kv
