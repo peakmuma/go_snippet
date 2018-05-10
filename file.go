@@ -29,6 +29,7 @@ func main() {
 		}
 	}
 	var knowWords []string
+	var notKnowWords []string
 	var res string
 	for i,w := range newWords {
 		fmt.Printf("[No:%d Total:%d] Do you know \"%s\" ? (y or n or q) ", i+1, len(newWords), w)
@@ -36,12 +37,20 @@ func main() {
 		if res == "y" {
 			knowWords = append(knowWords, w)
 		}
+		if res == "n" {
+			notKnowWords = append(notKnowWords, w)
+		}
 		if res == "q" {
 			break
 		}
 	}
 	//write know words to my word repo
 	addWordsToRepo(knowWords)
+	//print the word I don't know
+	fmt.Printf("The words I don't know total is %d\n", len(knowWords))
+	for _,w := range notKnowWords {
+		fmt.Println(w)
+	}
 
 	//sort
 	// var kvArray []kv
