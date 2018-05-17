@@ -112,9 +112,9 @@ func wordCount(text string) map[string]int {
 
 func getWordFreqRankMap (text string) map[string]int {
 	var wordFreqRankMap map[string]int = make(map[string]int, 0)
-	lines := strings.Split(text, "\n");
+	lines := strings.Split(text, "\r\n");
 	for i,line := range lines {
-		wordFreqRankMap[strings.Fields(line)[1]] = i;
+		wordFreqRankMap[line] = i;
 	}
 	return wordFreqRankMap
 }
