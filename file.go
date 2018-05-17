@@ -14,11 +14,18 @@ type kv struct {
 }
 
 func main() {
+	//read article word
 	b, err := ioutil.ReadFile("ebook_en/article.txt")
 	check(err)
 	str := string(b)
 	//count the word
 	wordMap := wordCount(str)
+	//read word freq
+	b, err = ioutil.ReadFile("wordFreq.txt")
+	check(err)
+	str = string(b)
+	//get word freq
+	wordFreqMap := getWordFreqRankMap(str)
 	//get my words
 	mywords := getWordsFromRepo();
 	// filter
@@ -32,7 +39,7 @@ func main() {
 	var notKnowWords []string
 	var res string
 	for i,w := range newWords {
-		fmt.Printf("[No:%d Total:%d] Do you know \"%s\" ? (y or n or q) ", i+1, len(newWords), w)
+		fmt.Printf("[No:%d Total:%d] Do you know \"%s\" , freq is %d? (y or n or q) ", i+1, len(newWords), w, wordFreqMap[w])
 		fmt.Scanln(&res)
 		if res == "y" {
 			knowWords = append(knowWords, w)
@@ -49,7 +56,7 @@ func main() {
 	//print the word I don't know
 	fmt.Printf("The words I don't know total is %d\n", len(notKnowWords))
 	for _,w := range notKnowWords {
-		fmt.Println(w)
+		fmt.Println(w, wordFreqMap[w])
 	}
 
 	//sort
@@ -101,6 +108,15 @@ func wordCount(text string) map[string]int {
 		}
 	}
 	return wordMap
+}
+
+func getWordFreqRankMap (text string) map[string]int {
+	var wordFreqRankMap map[string]int = make(map[string]int, 0)
+	lines := strings.Split(text, "\n");
+	for i,line := range lines {
+		wordFreqRankMap[strings.Fields(line)[1]] = i;
+	}
+	return wordFreqRankMap
 }
 
 func isLetter(a rune) bool {
