@@ -13,7 +13,7 @@ type kv struct {
 	Value int
 }
 
-func main() {
+func wordRepo() {
 	//read article word
 	b, err := ioutil.ReadFile("ebook_en/article.txt")
 	check(err)
@@ -123,11 +123,6 @@ func isLetter(a rune) bool {
 	return (a >= 65 && a <= 90) || (a >= 97 && a <= 122) || a == '-' || a == '\''
 }
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func getWordsFromRepo() []string{
 	b, err := ioutil.ReadFile("myword.txt")
