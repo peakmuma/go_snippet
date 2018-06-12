@@ -18,7 +18,8 @@ func httpGet() {
 
 func httpDo() {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "http://www.baidu.com", nil) //最后一个参数是body
+	url := "http://pm.shangdejigou.cn/user-login-L3VzZXItZWZmb3J0Y2FsZW5kYXItbGljaGVuZ2xvbmcuaHRtbA==.html"
+	req, err := http.NewRequest("GET", url, nil) //最后一个参数是body
 	check(err)
 	resp, err := client.Do(req)
 	check(err)

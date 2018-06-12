@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"time"
 	"strconv"
 )
@@ -12,11 +13,18 @@ import (
 func checkPMLog() {
 	today := getTodayUnix()
 	var names = []string{"wangzhuzhu", "qianlei", "baizhoujun", "xujian01", "liwenbin", "lichenglong", "yuanguopeng", "xiexiangpeng", "gaolei"}
+	// var names = []string{"gaolei"}
 	keyStr := "\"start\":" + strconv.FormatInt(today, 10)
 	for _,name := range names {
 		bodystr := getWebContent(name)
 		if len(bodystr) < 10000 {
-			fmt.Println(name, "get web content failed")
+			if strings.Contains(bodystr, "user-login") {
+				loginPM()
+			} else {
+				fmt.Println(bodystr)
+				fmt.Println(name, "get web content failed")
+				continue
+			}
 		}
 		if strings.Contains(bodystr, keyStr) {
 			fmt.Println(name, "write")
@@ -29,6 +37,24 @@ func checkPMLog() {
 	fmt.Scanln()
 }
 
+func loginPM() {
+	pmURL := "http://pm.shangdejigou.cn/user-login.html" 
+	client := &http.Client{}
+	data := url.Values{}
+	data.Add("account", "gaolei")
+	data.Add("password", "gaolei123456")
+	data.Add("keepLogin[]", "on")
+	req, _ := http.NewRequest("POST", pmURL, strings.NewReader(data.Encode())) //最后一个参数是body
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
+	client.Do(req)
+	// resp,_ := client.Do(req)
+	// defer resp.Body.Close()
+	// body, err := ioutil.ReadAll(resp.Body)
+	// check(err)
+	// fmt.Println(string(body))
+}
+
 func getWebContent(name string) string {
 	pmURL := "http://pm.shangdejigou.cn/user-effortcalendar-" + name + ".html" 
 	client := &http.Client{}
@@ -37,6 +63,9 @@ func getWebContent(name string) string {
 	check(err)
 	resp, err := client.Do(req)
 	check(err)
+	if resp.StatusCode != 200 {
+		fmt.Println(resp)
+	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	check(err)
