@@ -14,6 +14,8 @@ func startUDPServer (port int) {
 		n, remoteAddr, err := udpConn.ReadFromUDP(data)
 		check(err)
 		fmt.Printf("[%s] %s\n", remoteAddr, data[:n])
+		_, err = udpConn.WriteToUDP(data[:n], remoteAddr)
+		check(err)
 	}
 
 }
